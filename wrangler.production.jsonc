@@ -1,0 +1,30 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ongeki-collab",
+  "main": "src/runtimes/cloudflare/worker.ts",
+  "compatibility_date": "2026-09-13",
+  "workers_dev": false,
+  "routes": [{ "pattern": "collab.anontokyo.jp", "custom_domain": true }],
+  "assets": {
+    "directory": "./web",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/room", "/room/*", "/admin*"]
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "ongeki-collab",
+    "database_id": "7c0da17f-2986-4dec-a357-466bb2b3abfe",
+    "migrations_dir": "migrations"
+  }],
+  "durable_objects": { "bindings": [
+    { "name": "POOLS", "class_name": "PoolCoordinator" },
+    { "name": "ROOMS", "class_name": "RelayRoom" },
+    { "name": "GUARDS", "class_name": "RateGuard" },
+    { "name": "DIRECTORIES", "class_name": "PoolDirectory" }
+  ] },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["PoolCoordinator", "RelayRoom", "RateGuard"] },
+    { "tag": "v2", "new_sqlite_classes": ["PoolDirectory"] }
+  ],
+  "triggers": { "crons": ["0 * * * *"] }
+}

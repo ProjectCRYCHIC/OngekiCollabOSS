@@ -1,0 +1,66 @@
+{
+  "contract": "public-collab-client",
+  "version": 1,
+  "protocolVersion": 1,
+  "binaryFrame": {
+    "magicHex": "4f43",
+    "version": 1,
+    "headerBytes": 22,
+    "maximumPayloadBytes": 4096,
+    "kinds": {
+      "advertiseDatagram": 1,
+      "partyStreamOpen": 2,
+      "partyStreamData": 3,
+      "partyStreamClose": 4
+    },
+    "datagramPorts": [50000, 50002],
+    "goldenHex": "4f43010100000001000000000000c352000000010003010203"
+  },
+  "peers": {
+    "minimum": 1,
+    "maximum": 4,
+    "virtualIpv4Prefix": "10.255.0.",
+    "broadcastTarget": 0,
+    "directoryIpv4Cidr": "10.254.0.0/16"
+  },
+  "limits": {
+    "controlMessageBytes": 16384,
+    "receiveMessages": 512,
+    "sendFrames": 512,
+    "sendBytes": 2097152,
+    "streamBufferedBytes": 65536,
+    "pendingStreams": 64,
+    "datagramsPerSocket": 256,
+    "directoryEntries": 50,
+    "directoryResponseBytes": 262144,
+    "readyRttMilliseconds": 3000
+  },
+  "timeoutsMilliseconds": {
+    "matchToFirstSnapshot": 15000,
+    "webSocketRetryDelay": 1500,
+    "nativeSelfJoin": 10000,
+    "nativeStartFromRequest": 12000,
+    "abortNotificationDrain": 1000,
+    "scoreMinimumInterval": 1000,
+    "scoreUnchangedRefresh": 5000,
+    "directoryPoll": 5000,
+    "directoryFailureBackoff": 10000
+  },
+  "behavior": {
+    "webSocketRetries": 1,
+    "nativeStartReadFailures": 3,
+    "directoryFailurePreservesAddressAssignments": true,
+    "normalPlayEndLeavesWhenNativeResultArrives": true,
+    "normalPlayEndHasWallClockDelay": false,
+    "cancelledPlayCancelsNativeState": true,
+    "recruitingAbortSendsEndPlay": false,
+    "partialScoreStateMergesPresentFieldsOnly": true,
+    "reservedSeatProfilesAreCachedBeforeConnect": true,
+    "readyAndStartUseConnectedPlayersOnly": true,
+    "strictControlUtf8": true,
+    "sendByteAccounting": "binaryPayloadOnly",
+    "udpTargetZeroBroadcasts": true,
+    "streamBufferOverflowClosesOnlyThatStream": true,
+    "closeFrameSendFailureFailsTransport": true
+  }
+}

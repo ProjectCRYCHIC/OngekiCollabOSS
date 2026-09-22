@@ -1,0 +1,14 @@
+# Cloudflare local development secrets (wrangler dev reads .dev.vars).
+# Copy to .dev.vars and fill in; never commit .dev.vars.
+# Each secret must be an independent base64-encoded 32-byte key:
+#   openssl rand -base64 32
+
+IDENTITY_HASH_SECRET=
+KEY_ENCRYPTION_SECRET=
+TICKET_SIGNING_SECRET=
+ADMIN_RESET_SECRET=
+
+# Admin console (Cloudflare Zero Trust / Access); without these the /admin
+# surface stays denied and keeps failing closed.
+# ACCESS_TEAM_DOMAIN=https://<your-team>.cloudflareaccess.com
+# ACCESS_AUD=<access-application-aud-tag>

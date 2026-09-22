@@ -1,0 +1,190 @@
+/* Palette kept from the original dark board; the light theme mirrors it. */
+:root { --page-min-width: 400px; }
+:root, :root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101820;
+  --surface: #17242d;
+  --surface-raised: #15232c;
+  --surface-inset: #101c24;
+  --chip: #20323b;
+  --chip-host: #234f58;
+  --border: #2b3a44;
+  --border-strong: #30434d;
+  --border-input: #3a525d;
+  --border-button: #3c5660;
+  --text: #e8f0f1;
+  --text-title: #f4f8f8;
+  --text-secondary: #92a6af;
+  --text-faint: #8299a2;
+  --text-subtle: #9db0b8;
+  --text-label: #8ca2ab;
+  --text-count: #a8bac0;
+  --accent: #62d8ca;
+  --accent-text: #0b2222;
+  --accent-hover: #8ae7db;
+  --accent-muted: #78b7b1;
+  --accent-soft: #73dfcf;
+  --accent-dim: #89bdb9;
+  --accent-track: #16302e;
+  --playing: #f1ad99;
+  --danger-text: #f0b1a3;
+  --danger-border: #96675d;
+  --danger-button-border: #a77161;
+  --focus-ring: #62d8ca;
+  --overlay: rgba(5, 12, 16, .72);
+  --shadow: 0 18px 50px rgba(0, 0, 0, .5);
+  --table-line: #22333c;
+  --separator: #66828b;
+  --switch-knob: #8ca2ab;
+  --difficulty-basic: #6eea70;
+  --difficulty-advanced: #ffd35a;
+  --difficulty-expert: #ff9fd2;
+  --difficulty-master: #d6a3ff;
+  --difficulty-lunatic: #ffa2ad;
+  --score: #9fd8cf;
+  --end-reason: #e1bdad;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eef3f4;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-inset: #f2f7f8;
+  --chip: #e7eff1;
+  --chip-host: #c2e2dc;
+  --border: #ccdadd;
+  --border-strong: #b7c9cd;
+  --border-input: #b7c9cd;
+  --border-button: #a7bcc2;
+  --text: #22333c;
+  --text-title: #13222a;
+  --text-secondary: #5b7681;
+  --text-faint: #6b838d;
+  --text-subtle: #4f6a75;
+  --text-label: #62808b;
+  --text-count: #48626d;
+  --accent: #17a08f;
+  --accent-text: #ffffff;
+  --accent-hover: #129484;
+  --accent-muted: #2f8e83;
+  --accent-soft: #0e8c7d;
+  --accent-dim: #357f76;
+  --accent-track: #d4efe9;
+  --playing: #c26545;
+  --danger-text: #b04a35;
+  --danger-border: #d9a79a;
+  --danger-button-border: #c98d7f;
+  --focus-ring: #17a08f;
+  --overlay: rgba(16, 24, 32, .44);
+  --shadow: 0 18px 50px rgba(16, 24, 32, .24);
+  --table-line: #dde8ea;
+  --separator: #8aa4ac;
+  --switch-knob: #8ca2ab;
+  --difficulty-basic: #0f6417;
+  --difficulty-advanced: #835500;
+  --difficulty-expert: #a30059;
+  --difficulty-master: #65308f;
+  --difficulty-lunatic: #a80f32;
+  --score: #12796c;
+  --end-reason: #a2543a;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-width: var(--page-min-width); background: var(--bg); color: var(--text);
+  transition: background-color .25s ease, color .25s ease;
+  /* Sans-serif everywhere. Chinese faces come before Japanese ones so hanzi
+     renders with Chinese glyphs; :lang(ja) below flips the order when the
+     interface language is Japanese. */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei",
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, "Noto Sans CJK JP",
+    sans-serif;
+  font-synthesis: none;
+}
+:lang(ja) {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo,
+    "Noto Sans CJK JP", "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei",
+    sans-serif;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .4; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+  outline: 2px solid var(--focus-ring); outline-offset: 2px;
+}
+h1, h2, h3, p, dl, dd, dt { margin: 0; }
+
+.button {
+  min-height: 38px; padding: 0 15px; border: 1px solid var(--border-button); border-radius: 6px;
+  color: var(--text); background: var(--surface-inset); font-size: 13px; font-weight: 650;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.button:hover:not(:disabled) { border-color: var(--accent); }
+.button.primary { border-color: var(--accent); color: var(--accent-text); background: var(--accent); }
+.button.primary:hover:not(:disabled) { background: var(--accent-hover); }
+.button.quiet { border-color: transparent; background: transparent; color: var(--text-secondary); }
+.button.quiet:hover:not(:disabled) { color: var(--text); border-color: var(--border-button); }
+.button.danger { border-color: var(--danger-button-border); color: var(--danger-text); }
+.button.danger:hover:not(:disabled) { border-color: var(--danger-text); }
+.button.small { min-height: 30px; padding: 0 9px; font-size: 11px; }
+.button.icon-button { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; padding: 0 8px; }
+
+.text-input {
+  min-width: 0; height: 38px; padding: 0 12px; border: 1px solid var(--border-input); border-radius: 6px;
+  color: var(--text); background: var(--surface-inset); font-size: 13px; outline: 0;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.text-input::placeholder { color: var(--text-faint); }
+.text-input:focus { border-color: var(--accent); }
+@keyframes input-focus-in {
+  from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
+  65% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 24%, transparent); }
+  to { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent); }
+}
+.text-input:focus { animation: input-focus-in .26s ease-out both; }
+
+/* Custom locale dropdown (native select renders inconsistently across platforms). */
+.locale-select { position: relative; }
+.locale-trigger {
+  display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 10px;
+  border: 1px solid var(--border-button); border-radius: 6px; color: var(--text); background: var(--surface-inset);
+  font-size: 12px; font-weight: 650;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.locale-trigger:hover { border-color: var(--accent); }
+.locale-trigger .chev { transition: transform .18s ease; }
+.locale-trigger .chev.open { transform: rotate(180deg); }
+.locale-menu {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 60; min-width: 136px; margin: 0; padding: 6px;
+  list-style: none; border: 1px solid var(--border-strong); border-radius: 8px;
+  background: var(--surface-raised); box-shadow: var(--shadow);
+}
+.locale-option {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;
+  padding: 8px 10px; border: 0; border-radius: 5px; color: var(--text); background: transparent;
+  font-size: 12px; font-weight: 650; text-align: left;
+}
+.locale-option:hover { background: var(--chip); }
+.locale-option.active { color: var(--accent-soft); }
+
+.pop-enter-active, .pop-leave-active { transition: opacity .16s ease, transform .16s ease; }
+.pop-enter-from, .pop-leave-to { opacity: 0; transform: translateY(-4px) scale(.97); }
+
+.pagination { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-height: 42px; }
+.pagination button {
+  padding: 6px 10px; border: 1px solid var(--border-button); border-radius: 5px;
+  color: var(--text); background: var(--surface-inset); font-size: 12px;
+}
+.pagination button:not(:disabled):hover { border-color: var(--accent); }
+.pagination .page-label { min-width: 56px; color: var(--text-secondary); text-align: center; font-size: 12px; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+}

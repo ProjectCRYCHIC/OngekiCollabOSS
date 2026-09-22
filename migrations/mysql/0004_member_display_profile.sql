@@ -1,0 +1,1 @@
+ALTER TABLE room_members ADD COLUMN card_id INT NOT NULL DEFAULT 0;

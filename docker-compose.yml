@@ -1,0 +1,82 @@
+# OngekiCollab self-hosted stack. Existing bundled deployments keep using
+# MariaDB + Redis; DATABASE_BACKEND/REALTIME_BACKEND may independently select
+# mysql|sqlite and redis|memory.
+#
+# The bundled redis/db services live behind the "bundled" profile (enabled via
+# COMPOSE_PROFILES=bundled in .env). To run the app against your OWN MySQL/
+# MariaDB and Redis servers instead, clear COMPOSE_PROFILES and point DB_HOST,
+# DB_PORT and REDIS_URL at them — the app then starts alone.
+services:
+  app:
+    build: .
+    image: ongeki-collab:selfhost
+    restart: unless-stopped
+    ports:
+      # APP_BIND narrows the listener, e.g. 127.0.0.1 when behind a local proxy.
+      - "${APP_BIND:-}:${APP_PORT:-8080}:8787"
+    environment:
+      PORT: "8787"
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+      DATABASE_BACKEND: ${DATABASE_BACKEND:-mysql}
+      REALTIME_BACKEND: ${REALTIME_BACKEND:-redis}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: ${DB_NAME:-ongeki_collab}
+      DB_USER: ${DB_USER:-ongeki}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      SQLITE_PATH: ${SQLITE_PATH:-/data/ongeki-collab.sqlite}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      IDENTITY_HASH_SECRET: ${IDENTITY_HASH_SECRET:?set IDENTITY_HASH_SECRET in .env}
+      KEY_ENCRYPTION_SECRET: ${KEY_ENCRYPTION_SECRET:?set KEY_ENCRYPTION_SECRET in .env}
+      TICKET_SIGNING_SECRET: ${TICKET_SIGNING_SECRET:?set TICKET_SIGNING_SECRET in .env}
+      ADMIN_RESET_SECRET: ${ADMIN_RESET_SECRET:-}
+      ADMIN_INITIAL_PASSWORD: ${ADMIN_INITIAL_PASSWORD:-}
+    volumes:
+      # Used only by DATABASE_BACKEND=sqlite; harmless for MySQL deployments.
+      - sqlite_data:/data
+    # Order and health gating apply only when the bundled profile is active;
+    # with external database/redis the app starts alone (required: false).
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+      redis:
+        condition: service_healthy
+        required: false
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # bundled = full stack; "redis" = bundled Redis with an external database.
+    profiles: ["bundled", "redis"]
+    command: ["redis-server", "--appendonly", "no"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    # bundled = full stack; "mariadb" = bundled DB with memory/external realtime.
+    profiles: ["bundled", "mariadb"]
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-ongeki_collab}
+      MARIADB_USER: ${DB_USER:-ongeki}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  db_data:
+  redis_data:
+  sqlite_data:

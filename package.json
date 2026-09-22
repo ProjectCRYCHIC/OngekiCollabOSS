@@ -1,0 +1,67 @@
+{
+  "name": "ongeki-collab",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit && npm run test && npm run check:web && npm run check:client-contract && npm run clean-name",
+    "check:client-contract": "node scripts/check-client-contract.mjs",
+    "check:web": "vue-tsc --noEmit --project frontend/tsconfig.json",
+    "test": "npm run test:cloudflare && npm run test:selfhost",
+    "clean-name": "node scripts/check-name.mjs",
+    "dev": "wrangler dev",
+    "dev:web": "vite dev --config frontend/vite.config.ts",
+    "build:web": "node scripts/build-web.mjs && vite build --config frontend/vite.config.ts && vite build --config frontend/vite.admin.config.ts && vite build --config frontend/vite.login.config.ts",
+    "deploy": "npm run build:web && npm run db:migrate:cloudflare && wrangler deploy",
+    "deploy:production": "npm run build:web && npm run db:migrate:cloudflare:production && wrangler deploy --config wrangler.production.jsonc",
+    "db:migrate:selfhost": "node scripts/migrate-selfhost.mjs",
+    "db:migrate:cloudflare": "wrangler d1 migrations apply DB --remote",
+    "db:migrate:cloudflare:production": "wrangler d1 migrations apply DB --remote --config wrangler.production.jsonc",
+    "db:migrate:cloudflare:local": "wrangler d1 migrations apply DB --local",
+    "dev:selfhost": "tsx watch src/runtimes/selfhost/server.ts",
+    "build:selfhost": "tsc -p tsconfig.selfhost.json",
+    "admin:reset-password": "node scripts/admin-reset-password.mjs",
+    "test:cloudflare": "vitest run",
+    "test:selfhost": "vitest run --config vitest.selfhost.config.ts",
+    "test:selfhost:deps": "docker compose -f docker-compose.test.yml up -d --wait",
+    "test:selfhost:deps:down": "docker compose -f docker-compose.test.yml stop"
+  },
+  "cloudflare": {
+    "bindings": {
+      "IDENTITY_HASH_SECRET": {
+        "description": "Required. Generate an independent 32-byte Base64 key with `openssl rand -base64 32`."
+      },
+      "KEY_ENCRYPTION_SECRET": {
+        "description": "Required. Generate a different 32-byte Base64 key with `openssl rand -base64 32`."
+      },
+      "TICKET_SIGNING_SECRET": {
+        "description": "Required. Generate a different 32-byte Base64 key with `openssl rand -base64 32`."
+      },
+      "ADMIN_RESET_SECRET": {
+        "description": "Required for production administration and smoke cleanup. Generate a different 32-byte Base64 key."
+      }
+    }
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.1.8",
+    "@cloudflare/workers-types": "^5.20260911.1",
+    "@types/node": "^22.20.3",
+    "@types/ws": "^8.18.1",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.2",
+    "vite": "^7.3.6",
+    "vitest": "^4.1.11",
+    "vue": "^3.5.42",
+    "vue-i18n": "^11.4.10",
+    "vue-tsc": "^3.3.11",
+    "wrangler": "^4.131.1"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "^2.2.1",
+    "ioredis": "^6.0.0",
+    "jose": "^6.2.12",
+    "mysql2": "^3.24.4",
+    "ws": "^8.21.3"
+  }
+}

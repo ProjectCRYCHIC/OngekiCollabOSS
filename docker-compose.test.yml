@@ -1,0 +1,27 @@
+# Test-only dependencies for `npm run test:selfhost`: a disposable MariaDB and
+# Redis bound to localhost. Never use this file in production.
+services:
+  test-mariadb:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: ongeki_collab_test
+      MARIADB_USER: ongeki
+      MARIADB_PASSWORD: ongeki-test
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    ports:
+      - "127.0.0.1:3307:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  test-redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
